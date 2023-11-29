@@ -1,31 +1,39 @@
 import java.io.*;
 
-enum TokenType{ NUM,SOMA, MULT,APar,FPar, EOF}
+enum TokenType{ NUM,SOMA, MULT,SUB,DIV,APar,FPar, EOF}
 
 class Token{
-  char lexema;
+	//Aqui alteramos para que o construtor aceite strings
+  String lexema;
   TokenType token;
 
- Token (char l, TokenType t)
- 	{ lexema=l;token = t;}	
+ 	Token (String l, TokenType t)
+	{
+		lexema=l;
+		token = t;
+	}
+	Token (char l, TokenType t)
+	{
+		lexema=String.valueOf(l);
+		token = t;
+	}
 
 }
 
 class AnaliseLexica {
-
-	BufferedReader arquivo;
+	//alterando para poder devolver o caractere lido
+	PushbackReader arquivo;
 
 	AnaliseLexica(String a) throws Exception {
 
-		this.arquivo = new BufferedReader(new FileReader(a));
+		this.arquivo = new PushbackReader(new FileReader(a));
 
 	}
 
 	Token getNextToken() throws Exception {
-		Token token;
+		// Token token;
 		int eof = -1;
 		char currchar;
-		String currcharDef = null;
 		int currchar1;
 
 		do {
@@ -33,18 +41,27 @@ class AnaliseLexica {
 			currchar = (char) currchar1;
 		} while (currchar == '\n' || currchar == ' ' || currchar == '\t' || currchar == '\r');
 
-		if (currchar1 != eof && currchar1 != 10) {
-								
-	
-				/*if (currchar >= '0' && currchar <= '9')
-					return (new Token (currchar, TokenType.NUM));*/
+		if (currchar1 != eof && currchar1 != 10)
+		{
 			if (currchar >= '0' && currchar <= '9') {
+				StringBuilder lexemaString = new StringBuilder(); //No Stringbuilder vai ficar armazenado o lexema
+				lexemaString.append(currchar); //adiciona o primeiro caractere ao lexema
+				currchar1 = arquivo.read(); //Lê o próximo caractere
+				currchar = (char) currchar1; //Casting para converter para char
+
+				//Enquanto for um digito ele repete o processo anterior
 				while (currchar >= '0' && currchar <= '9') {
-					currcharDef = currcharDef + currchar;
+					lexemaString.append(currchar);
 					currchar1 = arquivo.read();
+					currchar = (char) currchar1;
 				}
-				return (new Token(currchar, TokenType.NUM));
-			} else
+
+				//Se o caractere lido não for um digito ele será devolvido para o arquivo
+				arquivo.unread(currchar); //Devolve o último caractere que foi lido
+
+				return (new Token(lexemaString.toString(), TokenType.NUM)); //Retorna o token NUM
+			}
+			else
 				switch (currchar){
 					case '(':
 						return (new Token (currchar,TokenType.APar));
@@ -54,6 +71,10 @@ class AnaliseLexica {
 						return (new Token (currchar,TokenType.SOMA));
 					case '*':
 						return (new Token (currchar,TokenType.MULT));
+					case '-':
+						return (new Token (currchar,TokenType.SUB));
+					case '/':
+						return (new Token (currchar,TokenType.DIV));
 
 					default: throw (new Exception("Caractere inválido: " + ((int) currchar)));
 				}
