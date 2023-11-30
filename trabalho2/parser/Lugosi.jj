@@ -1,0 +1,77 @@
+PARSER_BEGIN(Lugosi)
+import java.io.*;
+public class Lugosi {
+
+  public static void main(String args[]) throws ParseException,IOException {
+    
+ Lugosi parser = new Lugosi(new FileInputStream(args[0]));
+ parser.Lugosi();
+  }
+
+}
+
+PARSER_END(Lugosi)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <VOID: "void">
+| <LET: "let">
+| <FLOAT: "float">
+| <PONTOEVIRGULA: ";">
+| <ATRIBUICAO: ":=">
+| <PRINTIO: "printIO">
+
+}
+
+TOKEN :
+{
+  <NUM : (["0"-"9"])+ ("."(["0"-"9"])+)?>
+ |< ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_"(["a"-"z","A"-"Z","0"-"9"])+)*>
+
+}
+
+void Lugosi () :
+{}
+{
+
+    Main()
+    (Func())?
+    <EOF>
+}
+
+void VarDecl():
+{}
+{
+    (<VAR> <TIPO> <TOKEN_ID> <PONTOEVIRGULA> )
+}
+
+/*void Lugosi () :
+{Token t;}
+{
+
+(
+  <MAIN> { System.out.println("Palavra reservada: main");}
+| <ACHAVES> { System.out.println("Abre chaves: {");}
+| <FCHAVES> { System.out.println("Fecha chaves: }");}
+| t=<NUM> { System.out.println("Número: "+ t.image);}
+| t=<ID> { System.out.println("Identificador: "+ t.image);}
+| "void" { System.out.println("Palavra reservada: void");}
+| "let" { System.out.println("Palavra reservada: let");}
+| "float" { System.out.println("Palavra reservada: float");}
+| ";" { System.out.println("Ponto e virgula: ;");}
+| ":=" { System.out.println("Atribuição: :=");}
+| "printIO" { System.out.println("Palavra reservada: printIO");}
+)*
+<EOF> 
+*/
