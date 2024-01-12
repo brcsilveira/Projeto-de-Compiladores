@@ -99,3 +99,16 @@ void fator():
     | <TRUE>
     | <FALSE>
 }
+
+//void listaExp():
+//{}
+//{
+//    exp()
+//    | listaExp() <VIRGULA> exp()
+//}
+
+void func():
+{}
+{
+    (<FUNCTION> <TIPO> <TOKEN_ID> <APARENTESES> (listaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
+}
