@@ -90,3 +90,12 @@ void exp ():
     (<APARENTESES> exp() <OP> exp() <FPARENTESES> | fator())
 }
 
+void fator():
+{}
+{
+    <TOKEN_ID>
+    | (<APARENTESES> (listaExp())? <FPARENTESES>)
+    | <TOKEN_NUMLITERAL>
+    | <TRUE>
+    | <FALSE>
+}
