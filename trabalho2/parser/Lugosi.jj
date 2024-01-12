@@ -100,12 +100,30 @@ void fator():
     | <FALSE>
 }
 
-//void listaExp():
-//{}
-//{
-//    exp()
-//    | listaExp() <VIRGULA> exp()
-//}
+//LISTAEXP -> EXP | LISTAEXP "," EXP
+
+//Eliminacao recursao:
+//LISTAEXP -> EXP LISTAEXP'
+//LISTAEXP' -> "," EXP LISTAEXP' | ε
+
+
+void listaExp():
+{}
+{
+    exp() listaExpL()
+}
+
+void listaExpL():
+{}
+{
+    ( <VIRGULA> exp() listaExpL() )?
+}
+
+//LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
+
+//Eliminacao recursao:
+//LISTAARG -> TIPO TOKEN_id LISTAARG'
+//LISTAARG' -> "," TIPO TOKEN_id LISTAARG' | ε
 
 void func():
 {}
@@ -116,11 +134,11 @@ void func():
 void listaArg():
 {}
 {
-    <TIPO> <TOKEN_ID> listaArgPrime()
+    <TIPO> <TOKEN_ID> listaArgL()
 }
 
 void listaArgL():
 {}
 {
-    (<VIRGULA> <TIPO> <TOKEN_ID> listaArgPrime())?
+    (<VIRGULA> <TIPO> <TOKEN_ID> listaArgL())?
 }
