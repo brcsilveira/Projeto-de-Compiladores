@@ -83,4 +83,9 @@ void comando():
     |(<RETURN> exp() <PONTOVIR>)
     |(<PRINT> <APARENTESES> exp() <FPARENTESES> <PONTOVIR>)
 }
-//ola ola
+
+void exp ():
+{}
+{
+    (<APARENTESES> exp() <OP> exp() <FPARENTESES> | fator())
+}
