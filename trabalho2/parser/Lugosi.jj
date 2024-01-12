@@ -83,23 +83,3 @@ void comando():
     |(<RETURN> exp() <PONTOVIR>)
     |(<PRINT> <APARENTESES> exp() <FPARENTESES> <PONTOVIR>)
 }
-
-/*void Lugosi () :
-{Token t;}
-{
-
-(
-  <MAIN> { System.out.println("Palavra reservada: main");}
-| <ACHAVES> { System.out.println("Abre chaves: {");}
-| <FCHAVES> { System.out.println("Fecha chaves: }");}
-| t=<NUM> { System.out.println("Número: "+ t.image);}
-| t=<ID> { System.out.println("Identificador: "+ t.image);}
-| "void" { System.out.println("Palavra reservada: void");}
-| "let" { System.out.println("Palavra reservada: let");}
-| "float" { System.out.println("Palavra reservada: float");}
-| ";" { System.out.println("Ponto e virgula: ;");}
-| ":=" { System.out.println("Atribuição: :=");}
-| "printIO" { System.out.println("Palavra reservada: printIO");}
-)*
-<EOF> 
-*/
