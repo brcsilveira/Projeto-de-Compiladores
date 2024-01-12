@@ -112,3 +112,15 @@ void func():
 {
     (<FUNCTION> <TIPO> <TOKEN_ID> <APARENTESES> (listaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
 }
+
+void listaArg():
+{}
+{
+    <TIPO> <TOKEN_ID> listaArgPrime()
+}
+
+void listaArgL():
+{}
+{
+    (<VIRGULA> <TIPO> <TOKEN_ID> listaArgPrime())?
+}
