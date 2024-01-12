@@ -62,11 +62,19 @@ void Lugosi () :
     <EOF>
 }
 
+void main():
+{}
+{
+    <MAIN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+}
+
 void VarDecl():
 {}
 {
     (<VAR> <TIPO> <TOKEN_ID> <PONTOEVIRGULA>)*
 }
+
+//tipo
 
 void SeqComandos():
 {}
@@ -122,17 +130,17 @@ void listaExpL():
     ( <VIRGULA> exp() listaExpL() )?
 }
 
-//LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
-
-//Eliminacao recursao:
-//LISTAARG -> TIPO TOKEN_id LISTAARG'
-//LISTAARG' -> "," TIPO TOKEN_id LISTAARG' | ε
-
 void func():
 {}
 {
     (<FUNCTION> <TIPO> <TOKEN_ID> <APARENTESES> (listaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
 }
+
+//LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
+
+//Eliminacao recursao:
+//LISTAARG -> TIPO TOKEN_id LISTAARG'
+//LISTAARG' -> "," TIPO TOKEN_id LISTAARG' | ε
 
 void listaArg():
 {}
@@ -144,10 +152,4 @@ void listaArgL():
 {}
 {
     (<VIRGULA> <TIPO> <TOKEN_ID> listaArgL())?
-}
-
-void main():
-{}
-{
-    <MAIN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
 }
