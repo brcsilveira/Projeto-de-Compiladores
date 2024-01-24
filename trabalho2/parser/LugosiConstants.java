@@ -51,13 +51,11 @@ public interface LugosiConstants {
   /** RegularExpression Id. */
   int TOKEN_ID = 25;
   /** RegularExpression Id. */
-  int VOID = 26;
+  int NUM = 26;
   /** RegularExpression Id. */
-  int NUM = 27;
+  int ID = 27;
   /** RegularExpression Id. */
-  int ID = 28;
-  /** RegularExpression Id. */
-  int OP = 29;
+  int OP = 28;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -90,7 +88,6 @@ public interface LugosiConstants {
     "\"true\"",
     "\"false\"",
     "<TOKEN_ID>",
-    "\"void\"",
     "<NUM>",
     "<ID>",
     "<OP>",
