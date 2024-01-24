@@ -14,6 +14,7 @@ class Token{
 	}
 	Token (char l, TokenType t)
 	{
+		//Se for char é convertido para String
 		lexema=String.valueOf(l);
 		token = t;
 	}
@@ -41,8 +42,10 @@ class AnaliseLexica {
 			currchar = (char) currchar1;
 		} while (currchar == '\n' || currchar == ' ' || currchar == '\t' || currchar == '\r');
 
+		//Verifica se chegou ao fim do arquivo ou se é uma quebra de linha
 		if (currchar1 != eof && currchar1 != 10)
 		{
+			//Verifica se é um digito
 			if (currchar >= '0' && currchar <= '9') {
 				StringBuilder lexemaString = new StringBuilder(); //No Stringbuilder vai ficar armazenado o lexema
 				lexemaString.append(currchar); //adiciona o primeiro caractere ao lexema

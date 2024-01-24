@@ -18,7 +18,7 @@ public class MaquinaPilha {
         }
     }
     public static List<String> leArquivo(String nomeDoArquivo) {
-        List<String> codigo = new ArrayList<String>();
+        List<String> codigo = new ArrayList<String>(); //Armazena cada linha em "codigo"
         System.out.println("Lendo o arquivo: " + nomeDoArquivo);
 
         try {
@@ -37,7 +37,7 @@ public class MaquinaPilha {
     }
 
     public static double processaCodigo(List<String> comandos) {
-        Stack<Double> pilha = new Stack<Double>();
+        Stack<Double> pilha = new Stack<Double>(); //Armazena os valores durante o processo
         double resultado = 0.0;
 
         System.out.println("Processando o código: " + comandos);
