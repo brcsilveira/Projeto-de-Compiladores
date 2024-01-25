@@ -122,10 +122,11 @@ void comando():
     | <PRINTIO> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
 }
 
+//Para tirar a recursão
 void comandoL ():
 {}
 {
-	<ATRIBUICAO> exp() <PONTOEVIRGULA> | <APARENTESES> ( listaExp() )? <FPARENTESES> <PONTOEVIRGULA>
+	<ATRIBUICAO> exp() <PONTOEVIRGULA> | <APARENTESES> listaExp() <FPARENTESES> <PONTOEVIRGULA>
 }
 
 void doWhileComando():
