@@ -106,7 +106,7 @@ void exp ():
 void fator():
 {}
 {
-    <TOKEN_ID> fatorL() 
+    <TOKEN_ID> fatorL()
     | <TOKEN_NUMLITERAL>
     | <TRUE>
     | <FALSE>
@@ -127,7 +127,7 @@ void listaExp():
 void listaExpL():
 {}
 {
-    ( <VIRGULA> exp() listaExpL() )?
+    (<VIRGULA> exp() listaExpL())?
 }
 
 void func():
@@ -136,20 +136,8 @@ void func():
     (<FUNCTION> <TIPO> <TOKEN_ID> <APARENTESES> (listaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
 }
 
-//LISTAARG -> TIPO TOKEN_id | LISTAARG "," TIPO TOKEN_id
-
-//Eliminacao recursao:
-//LISTAARG -> TIPO TOKEN_id LISTAARG'
-//LISTAARG' -> "," TIPO TOKEN_id LISTAARG' | ε
-
 void listaArg():
 {}
 {
-    <TIPO> <TOKEN_ID> listaArgL()
-}
-
-void listaArgL():
-{}
-{
-    (<VIRGULA> <TIPO> <TOKEN_ID> listaArgL())?
+    <TIPO> <TOKEN_ID> (<PONTOEVIRGULA> listaArg())?
 }
