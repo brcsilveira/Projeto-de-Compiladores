@@ -43,7 +43,6 @@ TOKEN :
 | <TRUE: "true">
 | <FALSE: "false">
 | <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
-//| <VOID: "void">
 }
 
 TOKEN :
@@ -74,42 +73,11 @@ void VarDecl():
     (<VAR> <TIPO> <TOKEN_ID> <PONTOEVIRGULA>)*
 }
 
-//tipo
-
 void SeqComandos():
 {}
 {
     (comando())*
 }
-
-//void comando():
-//{}
-//{
-//    <TOKEN_ID> <ATRIBUICAO> exp() <PONTOEVIRGULA>
-//    | <TOKEN_ID> <APARENTESES> (listaExp())? <FPARENTESES> <PONTOEVIRGULA>
-//    | <IF> exp() <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-//    | <WHILE> exp() <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-//    | <TOKEN_ID> <ATRIBUICAO> <READIO> <APARENTESES> <FPARENTESES> <PONTOEVIRGULA>
-//    | <RETURN> exp() <PONTOEVIRGULA>
-//    | <PRINTIO> exp() <PONTOEVIRGULA>
-//}
-
-//void comando ():
-//{}
-//{
-//	<TOKEN_ID> Comando2() | <IF> <APARENTESES> exp() <FPARENTESES> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-//						| <WHILE> <APARENTESES> exp() <FPARENTESES> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-//						| <DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
-//						| <RETURN> exp() <PONTOEVIRGULA>
-//						| <PRINTIO> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
-//
-//}
-//
-//void Comando2 ():
-//{}
-//{
-//	<ATRIBUICAO> exp() <PONTOEVIRGULA> | <APARENTESES> ( listaExp() )? <FPARENTESES> <PONTOEVIRGULA>
-//}
 
 void comando():
 {}
@@ -117,7 +85,7 @@ void comando():
     <TOKEN_ID> comandoL()
     | <IF> <APARENTESES> exp() <FPARENTESES> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
     | <WHILE> <APARENTESES> exp() <FPARENTESES> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-    | doWhileComando()
+    | <DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
     | <RETURN> exp() <PONTOEVIRGULA>
     | <PRINTIO> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
 }
@@ -129,35 +97,26 @@ void comandoL ():
 	<ATRIBUICAO> exp() <PONTOEVIRGULA> | <APARENTESES> listaExp() <FPARENTESES> <PONTOEVIRGULA>
 }
 
-void doWhileComando():
-{}
-{
-    <DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
-}
-
-
 void exp ():
 {}
 {
-    (<APARENTESES> exp() <OP> exp() <FPARENTESES>)| fator()
+    <APARENTESES> exp() <OP> exp() <FPARENTESES>| fator()
 }
 
 void fator():
 {}
 {
-    <TOKEN_ID>
-    | (<APARENTESES> (listaExp())? <FPARENTESES>)
+    <TOKEN_ID> fatorL() 
     | <TOKEN_NUMLITERAL>
     | <TRUE>
     | <FALSE>
 }
 
-//LISTAEXP -> EXP | LISTAEXP "," EXP
-
-//Eliminacao recursao:
-//LISTAEXP -> EXP LISTAEXP'
-//LISTAEXP' -> "," EXP LISTAEXP' | ε
-
+void fatorL():
+{}
+{
+    (<APARENTESES> (listaExp())? <FPARENTESES>)?
+}
 
 void listaExp():
 {}
