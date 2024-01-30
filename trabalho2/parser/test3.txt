@@ -8,7 +8,7 @@ main {
     b := 10;
     flag := true;
 
-    function float soma (float a, float b){
+    function float soma ( float a, float b) {
     
         if ((a > 0) && (b > 0)){
             print(flag);
