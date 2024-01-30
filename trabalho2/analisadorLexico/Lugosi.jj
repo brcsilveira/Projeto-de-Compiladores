@@ -25,20 +25,31 @@ TOKEN :
   <MAIN: "main">
 | <ACHAVES: "{">
 | <FCHAVES: "}">
-| <VOID: "void">
-| <LET: "let">
-| <FLOAT: "float">
+| <VAR: "var">
 | <PONTOEVIRGULA: ";">
-| <ATRIBUICAO: ":=">
+| <TIPO: ("int" | "bool" | "float" | "let" | "void")>
+| <IF: "if">
+| <WHILE: "while">
+| <DO: "do">
+| <RETURN: "return">
 | <PRINTIO: "printIO">
-
+| <READIO: "readIO">
+| <ATRIBUICAO: ":=">
+| <APARENTESES:"(">
+| <FPARENTESES:")">
+| <FUNCTION: "function">
+| <VIRGULA: "virgula">
+| <TOKEN_NUMLITERAL:(["0"-"9"])+ ("."(["0"-"9"])+ )? ("E" ("+" | "-")? (["0"-"9"])+)?>
+| <TRUE: "true">
+| <FALSE: "false">
+| <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
 }
 
 TOKEN :
 {
-  <NUM : (["0"-"9"])+ ("."(["0"-"9"])+)?>
- |< ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_"(["a"-"z","A"-"Z","0"-"9"])+)*>
-
+ <NUM : (["0"-"9"])+ ("."(["0"-"9"])+)?>
+ | <ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_"(["a"-"z","A"-"Z","0"-"9"])+)*>
+ | <OP: "+" | "-" | "*" | "/" | "&&" | "||" | "<" | ">" | "==">
 }
 
 
@@ -51,13 +62,29 @@ void Lugosi () :
   <MAIN> { System.out.println("Palavra reservada: main");}
 | <ACHAVES> { System.out.println("Abre chaves: {");}
 | <FCHAVES> { System.out.println("Fecha chaves: }");}
+| <APARENTESES> { System.out.println("Abre parenteses: (");}
+| <FPARENTESES> { System.out.println("Fecha parenteses: }");}
+| <FUNCTION> { System.out.println("Palavra reservada: function}");}
+| <VAR> { System.out.println("Palavra reservada: var");}
+| <IF> { System.out.println("Palavra reservada: if");}
+| <WHILE> { System.out.println("Palavra reservada: while");}
+| <DO> { System.out.println("Palavra reservada: do");}
+| <RETURN> { System.out.println("Palavra reservada: return");}
+| <READIO> { System.out.println("Leitura de arquivo: readIO");}
+| t=<TIPO> {System.out.println("Tipo: "+ t.image);}
 | t=<NUM> { System.out.println("Número: "+ t.image);}
 | t=<ID> { System.out.println("Identificador: "+ t.image);}
-| "void" { System.out.println("Palavra reservada: void");}
-| "let" { System.out.println("Palavra reservada: let");}
-| "float" { System.out.println("Palavra reservada: float");}
+| t=<OP> {System.out.println("Operador: "+ t.image);}
+//| "void" { System.out.println("Palavra reservada: void");}
+//| "let" { System.out.println("Palavra reservada: let");}
+//| "float" { System.out.println("Palavra reservada: float");}
 | ";" { System.out.println("Ponto e virgula: ;");}
 | ":=" { System.out.println("Atribuição: :=");}
+| <VIRGULA> { System.out.println("Virgula: ,");}
+| t=<TOKEN_NUMLITERAL> {System.out.println("Token Numero Literal: "+ t.image);}
+| t=<TOKEN_ID> {System.out.println("Token ID: "+ t.image);}
+| <TRUE> { System.out.println("Palavra reservada: true");}
+| <FALSE> { System.out.println("Palavra reservada: false");}
 | "printIO" { System.out.println("Palavra reservada: printIO");}
 )*
 <EOF> 
