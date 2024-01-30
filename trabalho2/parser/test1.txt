@@ -4,5 +4,5 @@ main{
     do {
         print(i);
         i := (1 + i);
-    } while((i < t));
+    } while(i < t);
 }
