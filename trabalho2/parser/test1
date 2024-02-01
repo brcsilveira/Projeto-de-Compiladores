@@ -1,0 +1,21 @@
+void main {
+    let float a;
+    let float b;
+    let float result;
+
+    a := 20.0;
+    b := 10.0;
+    printIO a;
+    printIO b;
+
+    result := soma(a, b);
+    printIO result;
+
+    return 0.0;
+}
+
+def float soma(float x, float y) {
+    let float result;
+    result := (x + y);
+    return result;
+}
