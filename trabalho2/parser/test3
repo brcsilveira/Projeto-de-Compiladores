@@ -11,7 +11,7 @@ void main {
         printIO 1.0;
     };
     while (a > b) do {
-          printIO 5.0;
+          printIO a;
           a := (x - 1.0);
     };
     return 0.0;

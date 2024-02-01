@@ -87,7 +87,6 @@ void Lugosi () :
 | <APARENTESES> { System.out.println("Abre parenteses: (");}
 | <FPARENTESES> { System.out.println("Fecha parenteses: )");}
 | <IF> { System.out.println("Palavra reservada: if");}
-| <ELSE> { System.out.println("Palavra reservada: else");}
 | <WHILE> { System.out.println("Palavra reservada: while");}
 | <DO> { System.out.println("Palavra reservada: do");}
 | <RETURN> { System.out.println("Palavra reservada: return");}
