@@ -23,11 +23,15 @@ SKIP :
 TOKEN :
 {
   <MAIN: "main">
+| <VOID: "void">
+| <FLOAT: "float">
+| <BOOL: "bool">
+| <TRUE: "true">
+| <FALSE: "false">
 | <ACHAVES: "{">
 | <FCHAVES: "}">
-| <VAR: "var">
 | <PONTOEVIRGULA: ";">
-| <TIPO: ("int" | "bool" | "float" | "let")>
+| <LET: "let">
 | <IF: "if">
 | <WHILE: "while">
 | <DO: "do">
@@ -37,107 +41,145 @@ TOKEN :
 | <ATRIBUICAO: ":=">
 | <APARENTESES:"(">
 | <FPARENTESES:")">
-| <FUNCTION: "function">
-| <VIRGULA: "virgula">
-| <TOKEN_NUMLITERAL:(["0"-"9"])+ ("."(["0"-"9"])+ )? ("E" ("+" | "-")? (["0"-"9"])+)?>
-| <TRUE: "true">
-| <FALSE: "false">
-| <TOKEN_ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_")*>
+| <FUNCTION: "def">
+| <SEQ: ",">
+| <SUM: "+">
+| <SUB: "-">
+| <MULT: "*">
+| <DIV: "/">
+| <AND: "&&">
+| <OR: "||">
+| <LESS: "<">
+| <MAIOR: ">">
+| <EQUAL: "==">
 }
 
 TOKEN :
 {
- <NUM : (["0"-"9"])+ ("."(["0"-"9"])+)?>
- | <ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])* ("_"(["a"-"z","A"-"Z","0"-"9"])+)*>
- | <OP: "+" | "-" | "*" | "/" | "&&" | "||" | "<" | ">" | "==">
+    <NUM : (["0"-"9"])+(".")(["0"-"9"])+>
+    |<ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])*>
 }
 
 void Lugosi () :
 {}
 {
 
-    main()
-    (func())?
-    <EOF>
+    Main() (Func())?
+
 }
 
-void main():
+void Main () :
 {}
 {
-    <MAIN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
+    <VOID> <MAIN> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>
 }
 
-void VarDecl():
+void VarDecl () :
 {}
 {
-    (<VAR> <TIPO> <TOKEN_ID> <PONTOEVIRGULA>)*
+   (VarDeclL())
 }
 
-void SeqComandos():
+void VarDeclL () :
 {}
 {
-    (comando())*
+    (<LET> Tipo() <ID> <PONTOEVIRGULA> VarDeclL())?
 }
 
-void comando():
+void Tipo () :
 {}
 {
-    <TOKEN_ID> comandoL()
-    | <IF> <APARENTESES> exp() <FPARENTESES> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-    | <WHILE> <APARENTESES> exp() <FPARENTESES> <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA>
-    | <DO> <ACHAVES> SeqComandos() <FCHAVES> <WHILE> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
-    | <RETURN> exp() <PONTOEVIRGULA>
-    | <PRINTIO> <APARENTESES> exp() <FPARENTESES> <PONTOEVIRGULA>
+    <FLOAT> | <BOOL> | <VOID>
+}
+
+void SeqComandos () :
+{}
+{
+    (SeqComandosL())
+}
+
+void SeqComandosL ():
+{}
+{
+    (Comando() SeqComandosL())?
+}
+
+void Comando ():
+{}
+{
+    <PRINTIO> Exp() <PONTOEVIRGULA> | <RETURN> Exp() <PONTOEVIRGULA> | <WHILE> Exp() <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA> | <IF> Exp() <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA> | <ID> ComandoL()
 }
 
 //Para tirar a recursão
-void comandoL ():
+void ComandoL ():
 {}
 {
-	<ATRIBUICAO> exp() <PONTOEVIRGULA> | <APARENTESES> listaExp() <FPARENTESES> <PONTOEVIRGULA>
+	<APARENTESES> ListaExp() <FPARENTESES> <PONTOEVIRGULA> | <ATRIBUICAO> ComandoLL()
 }
 
-void exp ():
+void ComandoLL ():
 {}
 {
-    <APARENTESES> exp() <OP> exp() <FPARENTESES>| fator()
+    <READIO> <APARENTESES> <FPARENTESES> | Exp() <PONTOEVIRGULA>
 }
 
-void fator():
+void Exp ():
 {}
 {
-    <TOKEN_ID> fatorL()
-    | <TOKEN_NUMLITERAL>
-    | <TRUE>
-    | <FALSE>
+    <APARENTESES> Exp() Op() Exp() <FPARENTESES> | Fator()
 }
 
-void fatorL():
+void Fator ():
 {}
 {
-    (<APARENTESES> (listaExp())? <FPARENTESES>)?
+    <TRUE> | <FALSE> | <NUM> | <ID> FatorL()
 }
 
-void listaExp():
+void FatorL ():
 {}
 {
-    exp() listaExpL()
+    (<APARENTESES> ListaExp() <FPARENTESES>)?
 }
 
-void listaExpL():
+void Op ():
 {}
 {
-    (<VIRGULA> exp() listaExpL())?
+    <SUM> | <SUB> | <MULT> | <DIV> | <AND> | <OR> | <LESS> | <MAIOR> | <EQUAL>
 }
 
-void func():
+void ListaExp ():
 {}
 {
-    (<FUNCTION> <TIPO> <TOKEN_ID> <APARENTESES> (listaArg())? <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES>)+
+    Exp() ListaExpL()
 }
 
-void listaArg():
+void ListaExpL ():
 {}
 {
-    <TIPO> <TOKEN_ID> (<PONTOEVIRGULA> listaArg())?
+    (<SEQ> Exp() ListaExpL())?
+}
+
+void Func ():
+{}
+{
+    <FUNCTION> Tipo() <ID> <APARENTESES> ListaArg() <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> FuncL()
+}
+
+void FuncL () :
+{}
+{
+    (<FUNCTION> Tipo() <ID> <APARENTESES> ListaArg() <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> FuncL())?
+
+}
+
+void ListaArg():
+{}
+{
+    Tipo() <ID> ListaArgL()
+}
+
+void ListaArgL():
+{}
+{
+    (<SEQ> Tipo() <ID>)?
 }

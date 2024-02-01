@@ -1,0 +1,19 @@
+void main {
+    let float a;
+    let float b;
+
+    a := 20.0;
+    b := 10.0;
+    printIO a;
+    printIO b;
+
+    if (a > 2.0) {
+        printIO 1.0;
+    };
+    while (a > b) do {
+          printIO 5.0;
+          a := (x - 1.0);
+    };
+    return 0.0;
+}
+
