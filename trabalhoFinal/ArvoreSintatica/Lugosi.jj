@@ -1,0 +1,193 @@
+PARSER_BEGIN(Lugosi)
+import java.io.*;
+import ast.*;
+public class Lugosi {
+
+    public static void main(String args[]) throws ParseException,IOException {
+    
+    Lugosi fs = new Lugosi(new FileInputStream(args[0]));
+
+    Lugosi parser = new Lugosi(fs);
+    // Chamar a primeira regra do parser que irá
+    // analisar o código e devolver a árvore sintática
+    Prog arvore =parser.Lugosi();
+    // passar a árvore para o gerador de código
+    // que deve gerar um arquivo com com o código
+    // alvo na linguagem escolhida:
+    geraCodigo(arvore, args[0]);
+    }
+
+}
+
+PARSER_END(Lugosi)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+}
+
+TOKEN :
+{
+  <MAIN: "main">
+| <VOID: "void">
+| <FLOAT: "float">
+| <BOOL: "bool">
+| <TRUE: "true">
+| <FALSE: "false">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <PONTOEVIRGULA: ";">
+| <LET: "let">
+| <IF: "if">
+| <WHILE: "while">
+| <DO: "do">
+| <RETURN: "return">
+| <PRINTIO: "printIO">
+| <READIO: "readIO">
+| <ATRIBUICAO: ":=">
+| <APARENTESES:"(">
+| <FPARENTESES:")">
+| <FUNCTION: "def">
+| <SEQ: ",">
+| <SUM: "+">
+| <SUB: "-">
+| <MULT: "*">
+| <DIV: "/">
+| <AND: "&&">
+| <OR: "||">
+| <LESS: "<">
+| <MAIOR: ">">
+| <EQUAL: "==">
+}
+
+TOKEN :
+{
+    <NUM : (["0"-"9"])+(".")(["0"-"9"])+>
+    |<ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])*>
+}
+
+Prog Lugosi () :
+{Main main; ArrayList<Func> funcs;}
+{
+
+    main=Main() (funcs=Func())?
+
+{return new Prog(main,funcs);}
+}
+
+void Main () :
+{ArrayList<VarDecl> vars; ArrayList<Comando> coms;}
+{
+    <VOID> <MAIN> <ACHAVES> vars=VarDecl() coms=SeqComandos() <FCHAVES>
+
+{return new Main(vars,coms);}
+}
+
+
+
+ArrayList<VarDecl> VarDecl () :
+{ArrayList<VarDecl> decl = new ArrayList(); Tipo tipo; Token id;}
+{
+    (<LET> tipo=Tipo() var=<ID> <PONTOEVIRGULA> {decl.add(new VarDecl(tipo,var.image))} )*
+}
+
+void Tipo () :
+{}
+{
+    <FLOAT> | <BOOL> | <VOID>
+}
+
+void SeqComandos () :
+{}
+{
+    (SeqComandosL())
+}
+
+void SeqComandosL ():
+{}
+{
+    (Comando() SeqComandosL())?
+}
+
+void Comando ():
+{}
+{
+    <PRINTIO> Exp() <PONTOEVIRGULA> | <RETURN> Exp() <PONTOEVIRGULA> | <WHILE> Exp() <DO> <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA> | <IF> Exp() <ACHAVES> SeqComandos() <FCHAVES> <PONTOEVIRGULA> | <ID> ComandoL()
+}
+
+//Para tirar a recursão
+void ComandoL ():
+{}
+{
+	<APARENTESES> ListaExp() <FPARENTESES> <PONTOEVIRGULA> | <ATRIBUICAO> ComandoLL()
+}
+
+void ComandoLL ():
+{}
+{
+    <READIO> <APARENTESES> <FPARENTESES> | Exp() <PONTOEVIRGULA>
+}
+
+void Exp ():
+{}
+{
+    <APARENTESES> Exp() Op() Exp() <FPARENTESES> | Fator()
+}
+
+void Fator ():
+{}
+{
+    <TRUE> | <FALSE> | <NUM> | <ID> FatorL()
+}
+
+void FatorL ():
+{}
+{
+    (<APARENTESES> ListaExp() <FPARENTESES>)?
+}
+
+void Op ():
+{}
+{
+    <SUM> | <SUB> | <MULT> | <DIV> | <AND> | <OR> | <LESS> | <MAIOR> | <EQUAL>
+}
+
+void ListaExp ():
+{}
+{
+    Exp() ListaExpL()
+}
+
+void ListaExpL ():
+{}
+{
+    (<SEQ> Exp() ListaExpL())?
+}
+
+void Func ():
+{}
+{
+    <FUNCTION> Tipo() <ID> <APARENTESES> ListaArg() <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> FuncL()
+}
+
+void FuncL () :
+{}
+{
+    (<FUNCTION> Tipo() <ID> <APARENTESES> ListaArg() <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> FuncL())?
+
+}
+
+void ListaArg():
+{}
+{
+    Tipo() <ID> ListaArgL()
+}
+
+void ListaArgL():
+{}
+{
+    (<SEQ> Tipo() <ID>)?
+}
