@@ -1,10 +1,10 @@
 PARSER_BEGIN(Lugosi)
-import java.io.*;
+import java.io.*;import java.util.ArrayList;
 import ast.*;
 public class Lugosi {
 
     public static void main(String args[]) throws ParseException,IOException {
-    
+
     Lugosi fs = new Lugosi(new FileInputStream(args[0]));
 
     Lugosi parser = new Lugosi(fs);
@@ -16,6 +16,8 @@ public class Lugosi {
     // alvo na linguagem escolhida:
     geraCodigo(arvore, args[0]);
     }
+
+}}
 
 }
 
@@ -94,22 +96,20 @@ ArrayList<VarDecl> VarDecl () :
     (<LET> tipo=Tipo() var=<ID> <PONTOEVIRGULA> {decl.add(new VarDecl(tipo,var.image))} )*
 }
 
-void Tipo () :
-{}
+String Tipo () :
+{Token tipo;}
 {
-    <FLOAT> | <BOOL> | <VOID>
-}
+    tipo=<FLOAT> | tipo=<BOOL> | tipo=<VOID>
 
-void SeqComandos () :
-{}
-{
-    (SeqComandosL())
+    {return tipo.image;}
 }
-
-void SeqComandosL ():
-{}
+//Da pra fazer no mesmo estilo para as funções, só que usando o "+" ao invés do "*"
+ArrayList<SeqComandos> SeqComandos () :
+{ArrayList<SeqComandos> comandos = new ArrayList(); Comando c=null;}
 {
-    (Comando() SeqComandosL())?
+    (c=Comando(){comandos.add(c);})*
+
+    {return comandos;}
 }
 
 void Comando ():
