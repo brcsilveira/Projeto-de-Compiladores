@@ -1,11 +1,13 @@
 PARSER_BEGIN(Lugosi)
-import java.io.*;import java.util.ArrayList;
+import java.io.*;
 import ast.*;
+import java.util.*;
+
 public class Lugosi {
 
-    public static void main(String args[]) throws ParseException,IOException {
+    public static void main(String args[]) throws Exception {
 
-    Lugosi fs = new Lugosi(new FileInputStream(args[0]));
+    FileInputStream fs = new FileInputStream(new File(args[0]));
 
     Lugosi parser = new Lugosi(fs);
     // Chamar a primeira regra do parser que irá
@@ -14,7 +16,7 @@ public class Lugosi {
     // passar a árvore para o gerador de código
     // que deve gerar um arquivo com com o código
     // alvo na linguagem escolhida:
-    geraCodigo(arvore, args[0]);
+    GeraCodigo(arvore);
     }
 
 }}
