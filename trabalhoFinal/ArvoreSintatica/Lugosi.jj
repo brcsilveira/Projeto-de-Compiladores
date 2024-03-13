@@ -69,7 +69,7 @@ TOKEN :
 
 TOKEN :
 {
-    <NUM : (["0"-"9"])+(".")(["0"-"9"])+>
+    <NUM : (["0"-"9"])+(["."](["0"-"9"])+)?>
     |<ID: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"])*>
 }
 
@@ -77,7 +77,8 @@ Prog Lugosi () :
 {Main main; ArrayList<Func> funcs;}
 {
 
-    main=Main() (funcs=Func())?
+    main=Main()
+    funcs=Func()
 
 {return new Prog(main,funcs);}
 }
@@ -93,9 +94,11 @@ void Main () :
 
 
 ArrayList<VarDecl> VarDecl () :
-{ArrayList<VarDecl> decl = new ArrayList(); Tipo tipo; Token id;}
+{ArrayList<VarDecl> vars = new ArrayList<VarDecl>(); String tipo; String var; ArrayList<VarDecl> maisVars;}
 {
-    (<LET> tipo=Tipo() var=<ID> <PONTOEVIRGULA> {decl.add(new VarDecl(tipo,var.image))} )*
+    (<LET> tipo=Tipo() var=<ID>.image <PONTOEVIRGULA> {vars.add(new VarDecl(tipo,var)); maisVars=VarDecl(); vars
+    .addAll(maisVars); })?
+    {return vars;}
 }
 
 String Tipo () :
@@ -107,11 +110,49 @@ String Tipo () :
 }
 //Da pra fazer no mesmo estilo para as funções, só que usando o "+" ao invés do "*"
 ArrayList<SeqComandos> SeqComandos () :
-{ArrayList<SeqComandos> comandos = new ArrayList(); Comando c=null;}
+{ArrayList<Comando> comandos = new ArrayList<Comando>(); Comando c=null; ArrayList<Comando> maisComandos;}
 {
-    (c=Comando(){comandos.add(c);})*
+    (c=Comando(){comandos.add(c); maisComandos = SeqComandos(); comandos.addAll(maisComandos);})?
 
     {return comandos;}
+}
+
+Exp Fator () :
+{Token tipo; ArrayList<Exp> argumentos; String func;}
+{
+    LOOKAHEAD(2) tipo = <ID> <APARENTESES> argumentos = ListaExp() <FPARENTESES> {return new ExpChamaFunc(tipo.image, argumentos);} | tipo = <ID> {return ExpVar(tipo.image);} | tipo = <NUM> {return new ExpFloat(Float.parseFloat(tipo.image));} | <TRUE> {return new ExpTrue();} | <FALSE> {return new ExpFalse();}
+}
+
+String Op ():
+{Token tipo;}
+{
+    tipo = <SUM> | tipo = <SUB> | tipo = <MULT> | tipo = <DIV> | tipo = <AND> | tipo = <OR> | tipo = <LESS> | tipo = <MAIOR> | tipo = <EQUAL>
+
+    {return tipo.image;}
+}
+
+ArrayList<Exp> ListaExp ():
+{ArrayList<Exp> expressoes = new ArrayList<Exp>(); Exp e;}
+{
+    e = Exp() {expressoes.add(e);} (<SEQ> e = Exp() {expressoes.add(e);})*
+
+    {return  expressoes;}
+}
+
+ArrayList<Func> Func() :
+{ArrayList<Func> func = new ArrayList<Func>(); String nome; ArrayList<ParaFormalFun> parametros; String retorno;
+ArrayList<VarDecl> variaveis; ArrayList<Comando> comandos;}
+{
+    (<FUNCTION> retorno = Tipo() nome = <ID>.image "(" parametros = ListaArg() ")" "{" variaveis = VarDecl() comandos
+    = SeqComandos() "}" {func.add(new Func(nome, parametros, retorno, variaveis, comandos));})*
+
+    {return func;}
+}
+
+void ListaArg():
+{}
+{
+    Tipo() <ID> ListaArgL()
 }
 
 void Comando ():
@@ -139,36 +180,6 @@ void Exp ():
     <APARENTESES> Exp() Op() Exp() <FPARENTESES> | Fator()
 }
 
-void Fator ():
-{}
-{
-    <TRUE> | <FALSE> | <NUM> | <ID> FatorL()
-}
-
-void FatorL ():
-{}
-{
-    (<APARENTESES> ListaExp() <FPARENTESES>)?
-}
-
-void Op ():
-{}
-{
-    <SUM> | <SUB> | <MULT> | <DIV> | <AND> | <OR> | <LESS> | <MAIOR> | <EQUAL>
-}
-
-void ListaExp ():
-{}
-{
-    Exp() ListaExpL()
-}
-
-void ListaExpL ():
-{}
-{
-    (<SEQ> Exp() ListaExpL())?
-}
-
 void Func ():
 {}
 {
@@ -180,16 +191,4 @@ void FuncL () :
 {
     (<FUNCTION> Tipo() <ID> <APARENTESES> ListaArg() <FPARENTESES> <ACHAVES> VarDecl() SeqComandos() <FCHAVES> FuncL())?
 
-}
-
-void ListaArg():
-{}
-{
-    Tipo() <ID> ListaArgL()
-}
-
-void ListaArgL():
-{}
-{
-    (<SEQ> Tipo() <ID>)?
 }
