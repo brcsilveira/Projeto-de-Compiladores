@@ -8,7 +8,7 @@ public class GeraCodigo {
 
     public static void gerar(Prog prog) {
         try {
-            writer = new PrintWriter("Saida.java", "UTF-8");
+            writer = new PrintWriter("ArquivoDeSaida.java", "UTF-8");
 
             for(Fun f : prog.fun){ 
                 geraFun(f);
@@ -39,9 +39,13 @@ public class GeraCodigo {
     // Gera o código da classe Fun
     public static void geraFun(Fun fun){
         writer.println("public static " + fun.retorno + " " + fun.nome + "(");
-        for(ParamFormalFun param: fun.params){
-            writer.println(param.type + " " + param.var + ",");
+        for(int i = 0; i < fun.params.size(); i++){
+            writer.print(fun.params.get(i).type + " " + fun.params.get(i).var);
+            if(i < fun.params.size() - 1){
+                writer.print(",");
+            }
         }
+
         writer.println(") {");
 
         for(VarDecl vardecl: fun.vars){
@@ -161,8 +165,11 @@ public class GeraCodigo {
     // Gera o código da classe EChamadaFun
     public static String geraChamadaFun(EChamadaFun chamada){
         StringBuilder ret = new StringBuilder(chamada.fun).append("(");
-        for(Exp exp: chamada.args){
-            ret.append(geraExp(exp)).append(",");
+        for(int i = 0; i < chamada.args.size(); i++){
+            ret.append(geraExp(chamada.args.get(i)));
+            if(i < chamada.args.size() - 1){
+                ret.append(",");
+            }
         }
         return ret + ")";
     }
@@ -174,6 +181,10 @@ public class GeraCodigo {
 
     // Gera o código da classe VarDecl
     public static void geraVarDecl(VarDecl vardecl){
-        writer.println(vardecl.type + " " + vardecl.var + ";");
+        if ("bool".equals(vardecl.type)) {
+            writer.println("boolean " + vardecl.var + ";");
+        } else {
+            writer.println(vardecl.type + " " + vardecl.var + ";");
+        }
     }
 }

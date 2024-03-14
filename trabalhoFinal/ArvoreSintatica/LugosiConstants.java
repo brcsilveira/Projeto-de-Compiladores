@@ -33,41 +33,41 @@ public interface LugosiConstants {
   /** RegularExpression Id. */
   int READIO = 16;
   /** RegularExpression Id. */
-  int ACHAVES = 17;
+  int ATR = 17;
   /** RegularExpression Id. */
-  int FCHAVES = 18;
+  int SOMA = 18;
   /** RegularExpression Id. */
-  int APARENTESES = 19;
+  int SUB = 19;
   /** RegularExpression Id. */
-  int FPARENTESES = 20;
+  int MULT = 20;
   /** RegularExpression Id. */
-  int VIRGULA = 21;
+  int DIV = 21;
   /** RegularExpression Id. */
-  int TRUE = 22;
+  int AND = 22;
   /** RegularExpression Id. */
-  int FALSE = 23;
+  int OR = 23;
   /** RegularExpression Id. */
-  int PONTOEVIRGULA = 24;
+  int MENOR = 24;
   /** RegularExpression Id. */
-  int ATR = 25;
+  int MAIOR = 25;
   /** RegularExpression Id. */
-  int SOMA = 26;
+  int IGUAL = 26;
   /** RegularExpression Id. */
-  int SUB = 27;
+  int ACHAVES = 27;
   /** RegularExpression Id. */
-  int MULT = 28;
+  int FCHAVES = 28;
   /** RegularExpression Id. */
-  int DIV = 29;
+  int APARENTESES = 29;
   /** RegularExpression Id. */
-  int AND = 30;
+  int FPARENTESES = 30;
   /** RegularExpression Id. */
-  int OR = 31;
+  int VIRGULA = 31;
   /** RegularExpression Id. */
-  int MENOR = 32;
+  int TRUE = 32;
   /** RegularExpression Id. */
-  int MAIOR = 33;
+  int FALSE = 33;
   /** RegularExpression Id. */
-  int IGUAL = 34;
+  int PONTOEVIRGULA = 34;
   /** RegularExpression Id. */
   int NUM = 35;
   /** RegularExpression Id. */
@@ -95,14 +95,6 @@ public interface LugosiConstants {
     "\"float\"",
     "\"bool\"",
     "\"readIO\"",
-    "\"{\"",
-    "\"}\"",
-    "\"(\"",
-    "\")\"",
-    "\",\"",
-    "\"true\"",
-    "\"false\"",
-    "\";\"",
     "\":=\"",
     "\"+\"",
     "\"-\"",
@@ -113,6 +105,14 @@ public interface LugosiConstants {
     "\"<\"",
     "\">\"",
     "\"==\"",
+    "\"{\"",
+    "\"}\"",
+    "\"(\"",
+    "\")\"",
+    "\",\"",
+    "\"true\"",
+    "\"false\"",
+    "\";\"",
     "<NUM>",
     "<ID>",
   };

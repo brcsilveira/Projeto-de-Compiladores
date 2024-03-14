@@ -24,10 +24,6 @@ public class Lugosi {
   // alvo na linguagem escolhida:
   GeraCodigo.gerar(arvore);
   }
-  
-  // public static void geraCodigo(ArvoreLugosi prog, String arquivo){
-  //   //a
-  // }
 }
 
 PARSER_END(Lugosi)
@@ -54,14 +50,6 @@ TOKEN :
 | <FLOAT: "float">
 | <BOOL: "bool">
 | <READIO: "readIO">
-| <ACHAVES: "{">
-| <FCHAVES: "}">
-| <APARENTESES: "(">
-| <FPARENTESES: ")">
-| <VIRGULA: ",">
-| <TRUE: "true">
-| <FALSE: "false">
-| <PONTOEVIRGULA: ";">
 | <ATR: ":=">
 | <SOMA: "+">
 | <SUB: "-">
@@ -72,6 +60,14 @@ TOKEN :
 | <MENOR: "<">
 | <MAIOR: ">">
 | <IGUAL: "==">
+| <ACHAVES: "{">
+| <FCHAVES: "}">
+| <APARENTESES: "(">
+| <FPARENTESES: ")">
+| <VIRGULA: ",">
+| <TRUE: "true">
+| <FALSE: "false">
+| <PONTOEVIRGULA: ";">
 }
 
 TOKEN :
@@ -82,159 +78,122 @@ TOKEN :
 
 
 Prog LUGOSI() :
-{ 
-    Main main; 
-    ArrayList<Fun> fun = new ArrayList<Fun>(); 
-}
+{Main main; ArrayList<Fun> fun = new ArrayList<Fun>();}
 {
     main = MAIN() 
     fun = FUNC()
-    { return new Prog(main, fun); }
+
+    {return new Prog(main, fun);}
 }
 
 
 Main MAIN() :
-{ 
-    ArrayList<VarDecl> vars = new ArrayList<VarDecl>(); 
-    ArrayList<Comando> coms = new ArrayList<Comando>(); 
-}
+{ArrayList<VarDecl> vars = new ArrayList<VarDecl>(); ArrayList<Comando> coms = new ArrayList<Comando>();}
 {
     <VOID> <MAIN> <ACHAVES>
     vars = VARDECL() 
     coms = SEQCOMANDOS()    
     <FCHAVES>
-    { return new Main(vars, coms); }
+
+    {return new Main(vars, coms);}
 }
 
 
 ArrayList<VarDecl> VARDECL() :
-{ 
-    ArrayList<VarDecl> vars = new ArrayList<VarDecl>(); 
-    String type; 
-    String var; 
-    ArrayList<VarDecl> moreVars;
-}
+{ArrayList<VarDecl> vars = new ArrayList<VarDecl>(); String type; String var; ArrayList<VarDecl> moreVars;}
 {
-    (<LET> type = TIPO() var = <ID>.image <PONTOEVIRGULA> { vars.add(new VarDecl(type, var)); moreVars = VARDECL(); vars.addAll(moreVars); })?
-    { return vars; }
+    (<LET> type = TIPO() var = <ID>.image <PONTOEVIRGULA> {vars.add(new VarDecl(type, var)); moreVars = VARDECL(); vars.addAll(moreVars);})?
+
+    {return vars;}
 }
 
 
 String TIPO() :
-{ Token t; }
+{Token t;}
 {
-    t = <FLOAT> { return t.image; }
-    | t = <BOOL> { return t.image; }
-    | t = <VOID> { return t.image; }
+    t = <FLOAT> {return t.image;}
+    | t = <BOOL> {return t.image;}
+    | t = <VOID> {return t.image;}
 }
 
 ArrayList<Comando> SEQCOMANDOS() :
-{ 
-    ArrayList<Comando> coms = new ArrayList<Comando>(); 
-    Comando com; 
-    ArrayList<Comando> moreComs;
-}
+{ArrayList<Comando> coms = new ArrayList<Comando>(); Comando com; ArrayList<Comando> moreComs;}
 {
-    (com = COMANDO() { coms.add(com); moreComs = SEQCOMANDOS(); coms.addAll(moreComs); })?
-    { return coms; }
+    (com = COMANDO() {coms.add(com); moreComs = SEQCOMANDOS(); coms.addAll(moreComs);})?
+
+    {return coms;}
 }
 
 
 Exp FATOR() :
-{ 
-    Token t; 
-    ArrayList<Exp> args; 
-    String fun; 
-}
+{Token t; ArrayList<Exp> args; String fun;}
 {
-    LOOKAHEAD(2) t = <ID> <APARENTESES> args = LISTAEXP() <FPARENTESES> { return new EChamadaFun(t.image, args); }
-    | t = <ID> { return new EVar(t.image); }
-    | t = <NUM> { return new EFloat(Float.parseFloat(t.image)); }
-    | <TRUE> { return new ETrue(); }
-    | <FALSE> { return new EFalse(); }
+    LOOKAHEAD(2) t = <ID> <APARENTESES> args = LISTAEXP() <FPARENTESES> {return new EChamadaFun(t.image, args);}
+    | t = <ID> {return new EVar(t.image);}
+    | t = <NUM> {return new EFloat(Float.parseFloat(t.image));}
+    | <TRUE> {return new ETrue();}
+    | <FALSE> {return new EFalse();}
 }
 
 String OP() :
-{ 
-    Token t; 
-}
+{Token t;}
 {
-    t = <SOMA> { return t.image; }
-    | t = <SUB> { return t.image; }
-    | t = <MULT> { return t.image; }
-    | t = <DIV> { return t.image; }
-    | t = <AND> { return t.image; }
-    | t = <OR> { return t.image; }
-    | t = <MENOR> { return t.image; }
-    | t = <MAIOR> { return t.image; }
-    | t = <IGUAL> { return t.image; }
+    t = <SOMA> {return t.image;}
+    | t = <SUB> {return t.image;}
+    | t = <MULT> {return t.image;}
+    | t = <DIV> {return t.image;}
+    | t = <AND> {return t.image;}
+    | t = <OR> {return t.image;}
+    | t = <MENOR> {return t.image;}
+    | t = <MAIOR> {return t.image;}
+    | t = <IGUAL> {return t.image;}
 }
 
 
 ArrayList<Exp> LISTAEXP() :
-{ 
-    ArrayList<Exp> exps = new ArrayList<Exp>(); 
-    Exp e; 
-}
+{ArrayList<Exp> exps = new ArrayList<Exp>(); Exp e;}
 {
-    e = EXP() { exps.add(e); } (<VIRGULA> e = EXP() { exps.add(e); })*
-    { return exps; }
+    e = EXP() {exps.add(e);} (<VIRGULA> e = EXP() {exps.add(e);})*
+    
+    {return exps;}
 }
 
 
 
 ArrayList<Fun> FUNC() :
-{ 
-    ArrayList<Fun> fun = new ArrayList<Fun>(); 
-    String nome; ArrayList<ParamFormalFun> params; 
-    String retorno; 
-    ArrayList<VarDecl> vars; 
-    ArrayList<Comando> body; 
-}
+{ArrayList<Fun> fun = new ArrayList<Fun>(); String nome; ArrayList<ParamFormalFun> params;String retorno; ArrayList<VarDecl> vars;ArrayList<Comando> body;}
 {
-    (<DEF> retorno = TIPO() nome = <ID>.image "(" params = LISTAARG() ")" "{" vars = VARDECL() body = SEQCOMANDOS() "}" { fun.add(new Fun(nome, params, retorno, vars, body)); })*
-    { return fun; }
+    (<DEF> retorno = TIPO() nome = <ID>.image "(" params = LISTAARG() ")" "{" vars = VARDECL() body = SEQCOMANDOS() "}" {fun.add(new Fun(nome, params, retorno, vars, body));})*
+    
+    {return fun;}
 }
 
 
 ArrayList<ParamFormalFun> LISTAARG() :
-{ 
-    ArrayList<ParamFormalFun> params = new ArrayList<ParamFormalFun>(); 
-    String type; 
-    String var; 
-}
+{ArrayList<ParamFormalFun> params = new ArrayList<ParamFormalFun>(); String type; String var;}
 {
-    type = TIPO() var = <ID>.image { params.add(new ParamFormalFun(type, var)); } ("," type = TIPO() var = <ID>.image { params.add(new ParamFormalFun(type, var)); })*
-    { return params; }
+    type = TIPO() var = <ID>.image {params.add(new ParamFormalFun(type, var));} ("," type = TIPO() var = <ID>.image {params.add(new ParamFormalFun(type, var));})*
+    
+    {return params;}
 }
 
 
 
 Exp EXP() :
-{ 
-    Exp arg1; 
-    String op; 
-    Exp arg2;
-    Exp fator;
-}
+{Exp arg1; String op; Exp arg2; Exp fator;}
 {
-    "(" arg1 = EXP() op = OP() arg2 = EXP() ")" { return new EOpExp(op, arg1, arg2); }
-    | fator = FATOR() { return fator; }
+    "(" arg1 = EXP() op = OP() arg2 = EXP() ")" {return new EOpExp(op, arg1, arg2);}
+    | fator = FATOR() {return fator;}
 }
 
 Comando COMANDO() :
-{ 
-    Token t; 
-    Exp exp; 
-    ArrayList<Comando> coms = new ArrayList<Comando>(); 
-    ArrayList<Exp> args; 
-}
+{Token t; Exp exp; ArrayList<Comando> coms = new ArrayList<Comando>(); ArrayList<Exp> args;}
 {
-    LOOKAHEAD(3) t = <ID> <ATR> exp = EXP() <PONTOEVIRGULA> { return new CAtribuicao(t.beginLine, t.image, exp); }
-    | LOOKAHEAD(2) t = <ID> <APARENTESES> args = LISTAEXP() <FPARENTESES> <PONTOEVIRGULA> { return new CChamadaFun(t.beginLine, t.image, args); }
-    | t = <IF> exp = EXP() <ACHAVES> coms = SEQCOMANDOS() <FCHAVES> <PONTOEVIRGULA> { return new CIf(t.beginLine, exp, coms); }
-    | t = <WHILE> exp = EXP() <DO> <ACHAVES> coms = SEQCOMANDOS() <FCHAVES> <PONTOEVIRGULA> { return new CWhile(t.beginLine, exp, coms); }
-    | LOOKAHEAD(3) t = <ID> <ATR> <READIO> <APARENTESES> <FPARENTESES> { return new CReadInput(t.beginLine, t.image); }
-    | t = <RETURN> exp = EXP() <PONTOEVIRGULA> { return new CReturn(t.beginLine, exp); }
-    | t = <PRINTIO> exp = EXP() <PONTOEVIRGULA> { return new CPrint(t.beginLine, exp); }
+    LOOKAHEAD(3) t = <ID> <ATR> exp = EXP() <PONTOEVIRGULA> {return new CAtribuicao(t.beginLine, t.image, exp);}
+    | LOOKAHEAD(2) t = <ID> <APARENTESES> args = LISTAEXP() <FPARENTESES> <PONTOEVIRGULA> {return new CChamadaFun(t.beginLine, t.image, args);}
+    | t = <IF> exp = EXP() <ACHAVES> coms = SEQCOMANDOS() <FCHAVES> <PONTOEVIRGULA> {return new CIf(t.beginLine, exp, coms);}
+    | t = <WHILE> exp = EXP() <DO> <ACHAVES> coms = SEQCOMANDOS() <FCHAVES> <PONTOEVIRGULA> {return new CWhile(t.beginLine, exp, coms);}
+    | LOOKAHEAD(3) t = <ID> <ATR> <READIO> <APARENTESES> <FPARENTESES> {return new CReadInput(t.beginLine, t.image);}
+    | t = <RETURN> exp = EXP() <PONTOEVIRGULA> {return new CReturn(t.beginLine, exp);}
+    | t = <PRINTIO> exp = EXP() <PONTOEVIRGULA> {return new CPrint(t.beginLine, exp);}
 }
