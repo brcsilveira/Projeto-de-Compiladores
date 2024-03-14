@@ -1,0 +1,17 @@
+void main{
+    let bool B;
+    
+    let float J;
+
+    B := true;
+
+    J:=1;
+
+    if(B == true){
+        J := (J + 1);
+    };
+
+    if(B == false){
+       B := true;
+    };
+}
